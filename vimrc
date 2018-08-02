@@ -10,31 +10,35 @@ Plugin 'gmarik/Vundle.vim'
 
 " Plugin 'amdt/vim-niji'
 " Plugin 'christoomey/vim-tmux-navigator'
-" Plugin 'guns/vim-clojure-static'
-" Plugin 'tpope/vim-fireplace'
 Plugin 'davidhalter/jedi-vim'
 Plugin 'ervandew/supertab'
 Plugin 'flazz/vim-colorschemes'
+" Plugin 'godlygeek/tabular'
+" Plugin 'guns/vim-clojure-static'
 Plugin 'jacoborus/tender.vim'
 Plugin 'jiangmiao/auto-pairs'
 Plugin 'morhetz/gruvbox'
+" Plugin 'nathanaelkane/vim-indent-guides'
 Plugin 'quanganhdo/grb256'
 Plugin 'scrooloose/nerdtree'
 Plugin 'sickill/vim-pasta'
 Plugin 'tpope/vim-commentary'
+" Plugin 'tpope/vim-fireplace'
 Plugin 'tpope/vim-fugitive'
 Plugin 'tpope/vim-sensible'
 Plugin 'vim-airline/vim-airline'
 Plugin 'vim-airline/vim-airline-themes'
-Plugin 'wincent/Command-T'
+Plugin 'Vimjas/vim-python-pep8-indent'
 Plugin 'xolox/vim-colorscheme-switcher'
 Plugin 'xolox/vim-misc'
-"
+Plugin 'Yggdroot/indentLine'
+" Plugin 'wincent/Command-T'
+
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
 filetype plugin indent on    " required
 " To ignore plugin indent changes, instead use:
-"filetype plugin on
+" filetype plugin on
 "
 " Brief help
 " :PluginList       - lists configured plugins
@@ -48,7 +52,7 @@ filetype plugin indent on    " required
 " Set column 80 to highlight in active split
 augroup BgHighlight
     autocmd!
-    autocmd WinEnter * set colorcolumn=80
+    autocmd WinEnter * set colorcolumn=100
     autocmd WinLeave * set colorcolumn=0
 augroup END
 " Open new vertical splits on right side and horizontal splits below
@@ -64,20 +68,30 @@ nnoremap <c-y> 5<c-y>
 nnoremap <c-e> 5<c-e>
 nnoremap <D-F8> :RandomColorScheme <cr>
 
+" Alway show tab characters
+set list
+set listchars=tab:>-
+
+""" Settings for using spaces instead of tabs
 " size of a hard tabstop
 set tabstop=4
-
-" size of an "indent"
-set shiftwidth=4
-
+" size of an 'indent'
+" set shiftwidth=4
 " a combination of spaces and tabs are used to simulate tab stops at a width
 " other than the (hard)tabstop
 set softtabstop=4
-" make "tab" insert indents instead of tabs at the beginning of a line
+" make 'tab' insert indents instead of tabs at the beginning of a line
 set smarttab
-"
 " always uses spaces instead of tab characters
 set expandtab
+
+
+""" Settings for using tabs instead of spaces
+" set noexpandtab
+" set tabstop=4
+" set shiftwidth=4
+
+
 " Backup file.x with file.x~
 set backup
 set backupdir=~/.backup,/tmp
@@ -88,16 +102,16 @@ set ignorecase
 " Unless you type all caps
 set smartcase
 
-" Some settings to enable themes
-set relativenumber
-set number
-
 syntax enable
+
+
+" Gruvbox Settings
+set background=dark
+" let g:gruvbox_number_column='yellow'
 if has("gui_running")
-    color materialbox
-    set background=dark
+    color blackboard
 else
-    color grb256
+    color gruvbox
 endif
 " colorscheme badwolf
 " colorscheme base16-atelierdune
@@ -107,6 +121,12 @@ endif
 " colorscheme oxeded
 " set foldmethod=syntax
 set path=$PWD/**
+
+" Some settings to enable themes
+
+
+set relativenumber
+set number
 
 
 " set statusline+=%#warningmsg#
@@ -120,8 +140,9 @@ set path=$PWD/**
 " let g:syntastic_c_checkers = ['gcc']
 
 " IndentLine Settings:
-let g:indentLine_color_term = 237
-let g:indentLine_char = '︙'
+let g:indentLine_enabled = 1
+let g:indentLine_color_gui = '#232D1C'
+let g:indentLine_char = '▏' " ¦, ┆, │, ⎸, or ▏
 
 " CtrlP Settings:
 let g:ctrlp_working_path_mode = 'a'
@@ -161,11 +182,12 @@ let g:paredit_leader = ','
 " Prolog Settings
 let g:filetype_pl="prolog"
 
-" Font settings
+" GUI Settings
 if has('gui_running')
-    set macligatures
     " set guifont=Monoid\ Retina:h12
-    set guifont=Hasklug\ Nerd\ Font\ Complete\ Mono:h14
+    set guifont=Source\ Code\ Pro\ Regular\ 10
+    set noerrorbells
+    set novisualbell
 endif
 
 " Airline (Powerline) Settings
@@ -184,3 +206,16 @@ let g:jedi#use_splits_not_buffers = "right"
 
 "Supertab Settings
 let g:SuperTabDefaultCompletionType = "<c-n>"
+
+" Trailing whitespace
+highlight ExtraWhitespace ctermbg=red guibg=red
+match ExtraWhitespace /\s\+$/
+autocmd BufWinEnter * match ExtraWhitespace /\s\+$/
+autocmd InsertEnter * match ExtraWhitespace /\s\+\%#\@<!$/
+autocmd InsertLeave * match ExtraWhitespace /\s\+$/
+autocmd BufWinLeave * call clearmatches()
+
+autocmd BufWritePre * %s/\s\+$//e
+
+" Shortcuts
+set pastetoggle=<F2>
